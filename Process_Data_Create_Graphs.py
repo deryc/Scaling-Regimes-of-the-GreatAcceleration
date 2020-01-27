@@ -22,7 +22,7 @@ plt.rcParams['axes.labelsize'] = 16
 number = 0
 fig = plt.figure()
 for column in columnlist:
-    df = pd.read_csv('UN_Pop_Data_Normalized_Total_v2.csv',delimiter=',',parse_dates=['Year'])
+    df = pd.read_csv('UN_Pop_Data_Normalized_GreatAcceleration.csv',delimiter=',',parse_dates=['Year'])
     
     number += 1
 
