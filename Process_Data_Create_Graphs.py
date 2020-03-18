@@ -1,3 +1,9 @@
+
+###CREATED BY DERYC T. PAINTER
+###02.27.2020
+###USED IN THE REGRESSION EXAMPLES OF THE GREAT ACCELERATION: FIGURE 1
+
+
 import pandas as pd
 import seaborn as sns
 import matplotlib
