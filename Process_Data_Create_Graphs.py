@@ -12,16 +12,12 @@ columnlist = ['Global Foreign Direct Investment (Trillion US Dollar)','Web of Sc
                       'Global Telecommunications (Billion Landlines & Subscriptions)',
                       'USPTO Patent Grants']
 
-start = 1950
-end = 1959
-
-n = 7
 
 plt.rcParams['axes.labelsize'] = 16
 
-number = 0
+number = 0 #subplot tracking number
 fig = plt.figure()
-for column in columnlist:
+for column in columnlist: #only produce graphs from column list
     df = pd.read_csv('UN_Pop_Data_Normalized_GreatAcceleration.csv',delimiter=',',parse_dates=['Year'])
     
     number += 1
@@ -31,12 +27,12 @@ for column in columnlist:
     
     measure = column
     df = df.dropna(subset = [column])
-    df = df.dropna(subset=['Normalized UN Population Estimate'])
+    df = df.dropna(subset=['Normalized UN Population Estimate']) #remove empty data points
     x = df['Normalized UN Population Estimate'] 
 
     y =  df[column]
 
-    #fig, ax = plt.subplots()
+    
     if number == 1:
         ax1 = axis = fig.add_subplot(2,2,number,xlabel=None,ylabel=measure)
     if number == 2:
@@ -45,71 +41,49 @@ for column in columnlist:
         ax3 = axis = fig.add_subplot(2,2,number,sharex=ax1,xlabel='Normalized UN Population Estimate',ylabel=measure)
     if number == 4:
         ax4 = axis = fig.add_subplot(2,2,number,sharex=ax2,xlabel='Normalized UN Population Estimate',ylabel=measure)
-
-
-
     
 
-    
-
-    plt.scatter(x,y,label=None,color='black',s=10)
-
-    
-
-
+    plt.scatter(x,y,label=None,color='black',s=10) #plot raw data points on a log-log scale
     axis.set_xscale('log')
     axis.set_yscale('log')
     
-
-    
-
-    
-    
     
     if number == 4:
-        next(ax4._get_lines.prop_cycler)['color']
+        next(ax4._get_lines.prop_cycler)['color'] # assign universal colors for a single legend for all subplots
     
     decades = df.groupby(pd.DatetimeIndex(df['Year']).year // 10 * 10)
-    for name, d in decades:
+    for name, d in decades: #group data into decades
 
 
         x2 = round(np.log(d['Normalized UN Population Estimate']),4)
         y2 = round(np.log(d[column]),4)
         x3 = d['Normalized UN Population Estimate']
         
-        slope, intercept, r_value, p_value, std_err = sts.linregress(x2,y2)
+        slope, intercept, r_value, p_value, std_err = sts.linregress(x2,y2) #calculate scaling exponent and normalization constant
         alpha = np.exp(intercept)
         beta = slope
         
 
-        
-
-        Y = eval('alpha*x3**beta')
+        Y = eval('alpha*x3**beta') #calculate regression line
 
 
         
         if d.shape[0] > 1:
+            plt.plot(x3,Y,label=r"{}s".format(name)) #plot regression lines by decade
             
-
-            plt.plot(x3,Y,label=r"{}s".format(name))
-
+        #create text boxes stating the scaling exponent
         axis.text(x3.median(),Y.median(),r'$\beta=${}'.format(round(beta,4)),bbox=dict(facecolor='white', boxstyle='round'),horizontalalignment='left',verticalalignment='top',visible=True,fontsize=14)
         axis.set_zorder(1)
         axis.set_facecolor('none')
-        
-    
     
     axis.grid(which='both')
-
-
-
 
 h1, l1 = ax1.get_legend_handles_labels()
 h2, l2 = ax2.get_legend_handles_labels()
 h3, l3 = ax3.get_legend_handles_labels()
 h4, l4 = ax4.get_legend_handles_labels()
 
-fig.legend(h2,l2,loc='center',fontsize=14)
+fig.legend(h2,l2,loc='center',fontsize=14) #create single legend using the same color for each decade
 fig.suptitle('Scaling Relationships of the Great Accleration',fontsize=48)
 
 plt.tight_layout
