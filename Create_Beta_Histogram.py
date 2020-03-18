@@ -12,7 +12,7 @@ from scipy import stats as sts
 import matplotlib.gridspec as gridspec
 
 
-df = pd.read_csv('UN_Pop_Data_Normalized_Total_v2.csv',delimiter=',',parse_dates=['Year'])
+df = pd.read_csv('UN_Pop_Data_Normalized_GreatAcceleration.csv',delimiter=',',parse_dates=['Year'])
 
 decades = df.groupby(pd.Grouper(key='Year', freq='10y', closed='left'))
 
