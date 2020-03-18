@@ -61,7 +61,7 @@ with open('Total_Scaling_Relationships_per_Decade.csv','w') as f:
     print('Measurement\tDecade\t{}\t{}\tP value\tStandard Error'.format(r'$\beta$',r'$R^2$'),file=f)
 
     for column in columnlist:
-        df = pd.read_csv('UN_Pop_Data_Normalized_Total_v2.csv',delimiter=',',parse_dates=['Year'])
+        df = pd.read_csv('UN_Pop_Data_Normalized_GreatAcceleration.csv',delimiter=',',parse_dates=['Year'])
         df = df.dropna(subset = [column])
         df = df.dropna(subset=['Normalized UN Population Estimate'])
         for name, d in df.groupby(pd.DatetimeIndex(df['Year']).year // 10 * 10):
